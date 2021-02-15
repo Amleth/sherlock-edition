@@ -1,5 +1,8 @@
 export const request = {
-    sparqlEndpoint: sparqlEndpoint
+    sparqlEndpoint: sparqlEndpoint,
+};
+export const utils = {
+    uriEndpoint: "http://data-iremus.huma-num.fr/id/"
 };
 
 async function sparqlEndpoint(query) {

@@ -3,3 +3,7 @@ export function getIdFromURL(url) {
     const splitUrl = url.split('/');
     return splitUrl[splitUrl.length-1];
 }
+
+export default {
+    articleContentIndex: 6
+}

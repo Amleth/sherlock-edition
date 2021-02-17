@@ -17,5 +17,5 @@ async function sparqlEndpoint(query) {
         body: `query=${encodeURIComponent(query)}`,
     });
     res = await res.json();
-    return res
+    return res;
 }

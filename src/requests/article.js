@@ -30,5 +30,15 @@ export async function getArticleById(articleId) {
 }
 
 export async function getArticleContentByReference(reference) {
-    return require('../../json_temp/articles/' + reference + '.json');
+    let res = await fetch(`http://data-iremus.huma-num.fr/files/mercure-galant/json/articles/${reference}.json`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        mode: 'cors',
+        cache: 'no-cache',
+        redirect: 'follow',
+    });
+    res = await res.json();
+    return res;
 }

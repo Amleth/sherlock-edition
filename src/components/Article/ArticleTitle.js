@@ -1,14 +1,14 @@
 import React from "react";
 import ArticleItem from "./ArticleItem";
 
-function ArticleParagraph(props) {
-    return <p>
+function ArticleTitle(props) {
+    return <h1>
         <ArticleItem
             key={props.item.id}
             item={props.item}
             tagAlreadyPrinted={true}
         />
-        </p>
+    </h1>
 }
 
-export default ArticleParagraph;
+export default ArticleTitle;

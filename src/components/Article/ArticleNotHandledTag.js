@@ -1,14 +1,14 @@
 import React from "react";
 import ArticleItem from "./ArticleItem";
 
-function ArticleParagraph(props) {
-    return <p>
+function ArticleNotHandledTag(props) {
+    return <span
+    style={{"backgroundColor": "red"}}>
         <ArticleItem
-            key={props.item.id}
             item={props.item}
             tagAlreadyPrinted={true}
         />
-        </p>
+    </span>
 }
 
-export default ArticleParagraph;
+export default ArticleNotHandledTag;

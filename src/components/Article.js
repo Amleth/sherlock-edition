@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {getArticleById, getArticleContentByReference} from "../requests/article";
 import {useParams} from "react-router-dom";
-import ArticleHeader from "./Article/ArticleHeader";
 import utils from '../utils/utils'
 import ArticleItem from "./Article/ArticleItem";
 
@@ -15,7 +14,7 @@ function Article() {
     useEffect(() => {
         getArticleById(articleId).then(articleData => {
             //TODO: refactor quand les identifiants des articles pourront être récupérés
-            articleReference = "MG-1672-01_001";
+            articleReference = "MG-1672-01_013";
             getArticleContentByReference(articleReference).then(articleContentData => {
                 setArticle({
                     data: articleData.results.bindings,
@@ -26,19 +25,14 @@ function Article() {
     }, []);
 
     if (article.contentData) {
-        const articleHeader = article.contentData.div;
-        const articleContent = Object.keys(article.contentData.div).slice(utils.articleContentIndex);
+        const articleContent = article.contentData.children;
+        console.log(articleContent);
         return <div>
-            <ArticleHeader
-                edition={articleHeader.bibl.title.value}
-                livraison={articleHeader.bibl["#"].value}
-                articleTitle={articleHeader.head.value}
-            />
-            {articleContent.map(tag =>
+            {articleContent.map(item =>
                 <ArticleItem
-                    key={tag}
-                    tag={tag}
-                    value={article.contentData.div[tag]}
+                    key={item.id}
+                    item={item}
+                    tagAlreadyPrinted={false}
                 />
             )}
         </div>

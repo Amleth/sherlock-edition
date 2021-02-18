@@ -22,7 +22,9 @@ export function tagTranslate(tag, item) {
             return <ArticleTitle
                 key={item.id}
                 item={item}
-            />;
+            >
+                {item.children.map}
+            </ArticleTitle>;
         case "bibl":
             return <ArticleItem
                 key={item.id}

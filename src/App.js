@@ -8,8 +8,8 @@ function App() {
   return (
       <React.Fragment>
         <Route exact path="/" component={LivraisonList} />
-        <Route path="/livraison/:livraisonId" component={Livraison} />
-        <Route path="/article/:articleId" component={Article} />
+        <Route path="/livraison/:livraisonReference" component={Livraison} />
+        <Route path="/article/:articleReference" component={Article} />
       </React.Fragment>
   );
 }

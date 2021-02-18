@@ -1,26 +1,27 @@
 import React, {useEffect, useState} from "react";
-import {getLivraisonById} from "../requests/livraison";
+import {getLivraisonByReference} from "../requests/livraison";
 import {Link, useParams} from "react-router-dom";
-import {getIdFromURL} from "../utils/utils";
 
 function Livraison() {
     const [livraison, setLivraison] = useState([]);
-    const { livraisonId } = useParams();
+    const { livraisonReference } = useParams();
 
     useEffect(() => {
-        getLivraisonById(livraisonId).then(res => {
+        getLivraisonByReference(livraisonReference).then(res => {
             setLivraison(res.results.bindings)
         });
     }, []);
+
+    console.log(livraison);
 
     return (
         <ul>
             {
                 livraison.map(article =>
-                    <li key={article.F2_article.value}>
+                    <li key={article.reference_article.value}>
                         <Link
                             to={{
-                                pathname: '/article/' + getIdFromURL(article.F2_article.value),
+                                pathname: '/article/' + article.reference_article.value,
                             }}
                         >
                             {article.titre_article.value}

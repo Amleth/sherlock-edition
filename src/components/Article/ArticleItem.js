@@ -16,7 +16,7 @@ function ArticleItem(props) {
             {tagTranslate(props.item.tag, props.item)}
         </React.Fragment>
     }
-    if (props.item.children) { // si ce n'est pas une balise terminale
+    if (props.tagAlreadyPrinted && props.item.children) { // si ce n'est pas une balise terminale
         return <React.Fragment>
             { props.item.children.map(item =>
                 <ArticleItem

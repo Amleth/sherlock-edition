@@ -12,8 +12,6 @@ function Livraison() {
         });
     }, []);
 
-    console.log(livraison);
-
     return (
         <ul>
             {

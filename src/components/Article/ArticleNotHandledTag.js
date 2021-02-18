@@ -4,10 +4,7 @@ import ArticleItem from "./ArticleItem";
 function ArticleNotHandledTag(props) {
     return <span
     style={{"backgroundColor": "red"}}>
-        <ArticleItem
-            item={props.item}
-            tagAlreadyPrinted={true}
-        />
+            {props.children}
     </span>
 }
 

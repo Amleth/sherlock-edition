@@ -24,7 +24,6 @@ function Article() {
             <ArticleItem
                 key={item.id}
                 item={item}
-                tagAlreadyPrinted={false}
             />
         )}
     </div>

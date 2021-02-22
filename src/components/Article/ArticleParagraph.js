@@ -1,9 +1,8 @@
 import React from "react";
 
 function ArticleParagraph(props) {
-    return <p>
+    return <p className={"paragraph"}>
             {props.children}
-            yes
         </p>
 }
 

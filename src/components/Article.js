@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {getArticleById, getArticleContentByReference} from "../requests/article";
+import {getArticleContentByReference} from "../requests/article";
 import {useParams} from "react-router-dom";
 import ArticleItem from "./Article/ArticleItem";
+import '../styles/MG/article.css';
 
 function Article() {
     const [article, setArticle] = useState({
@@ -19,7 +20,7 @@ function Article() {
     }, []);
 
     const articleContent = article.contentData.children;
-    return <div>
+    return <div className={"article"}>
         {articleContent.map(item =>
             <ArticleItem
                 key={item.id}

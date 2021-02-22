@@ -1,0 +1,38 @@
+.article {
+    font-family: 'IM Fell English', serif;
+    width: 50%;
+}
+
+.article .paragraph {
+    text-align: justify;
+}
+
+.article .quote {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.article .label {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.article .quote .verse {
+    font-style: italic;
+}
+
+.article .quote .verse .space {
+    margin-right: 2em;
+}
+
+.article .note {
+    position: absolute;
+    width: 20%;
+    left: 55%;
+}
+
+.article img {
+    width: 100%;
+}

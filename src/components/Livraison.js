@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {getLivraisonByReference} from "../requests/livraison";
-import {Link, useParams} from "react-router-dom";
+import {Link, useParams, useLocation} from "react-router-dom";
 
 function Livraison() {
     const [livraison, setLivraison] = useState([]);
     const { livraisonReference } = useParams();
+    const location = useLocation();
 
     useEffect(() => {
         getLivraisonByReference(livraisonReference).then(res => {
@@ -19,7 +20,7 @@ function Livraison() {
                     <li key={article.reference_article.value}>
                         <Link
                             to={{
-                                pathname: '/article/' + article.reference_article.value,
+                                pathname: location.pathname + 'article/' + article.reference_article.value,
                             }}
                         >
                             {article.titre_article.value}

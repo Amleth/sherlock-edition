@@ -1,8 +1,6 @@
 import {request as req, utils} from "./request";
 
-//TODO: récupérer un identifiant plutôt que le lien vers le TEI à parser
-
-export async function getArticleById(articleId) {
+export async function getArticleByReference(articleReference) {
     return req.sparqlEndpoint(
         `
         PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
@@ -22,7 +20,7 @@ export async function getArticleById(articleId) {
             ?E42_article crm:P106_is_composed_of ?E42_tei.
             ?E42_tei rdfs:label ?E42_tei_string
             VALUES (?F2_article) {
-                (<${utils.uriEndpoint + articleId}>)
+                (<${utils.uriEndpoint + articleReference}>)
             }
           }
         }`

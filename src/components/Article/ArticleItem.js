@@ -2,7 +2,6 @@ import React from "react";
 import {tagTranslate} from "../../utils/tagTranslator";
 
 function ArticleItem(props) {
-    console.log(props);
     // Si on est sur une feuille, c'est-à-dire uniquement du texte à afficher
     if (props.item.text || props.item.text === "") {
         return <React.Fragment>

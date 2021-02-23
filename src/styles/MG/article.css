@@ -9,7 +9,12 @@
 
 .article .quote {
     margin: 0 auto;
-    width: 50%;
+    width: fit-content;
+    border: 3px solid red
+}
+
+.article .quote .label:last-of-type{
+    margin-bottom: 1em;
 }
 
 .article .label {

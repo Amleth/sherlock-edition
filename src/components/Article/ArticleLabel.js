@@ -1,11 +1,11 @@
 import React from "react";
 
 function ArticleLabel(props) {
-    return <div
+    return <h3
         className={"label"}
     >
         {props.children}
-    </div>
+    </h3>
 }
 
 export default ArticleLabel;

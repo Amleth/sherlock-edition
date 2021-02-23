@@ -90,6 +90,8 @@ export function tagTranslate(tag, node) {
             >
                 {computedNode}
             </ArticleImage>;
+        case "lb":
+            return <br/>;
         default:
             console.log(node);
             return <ArticleNotHandledTag

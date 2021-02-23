@@ -20,7 +20,7 @@ function Livraison() {
                     <li key={article.reference_article.value}>
                         <Link
                             to={{
-                                pathname: location.pathname + 'article/' + article.reference_article.value,
+                                pathname: location.pathname + '/article/' + article.reference_article.value,
                             }}
                         >
                             {article.titre_article.value} - {getPageValueByArticleReference(article.reference_article.value)}

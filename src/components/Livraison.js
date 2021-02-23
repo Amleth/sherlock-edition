@@ -23,13 +23,17 @@ function Livraison() {
                                 pathname: location.pathname + 'article/' + article.reference_article.value,
                             }}
                         >
-                            {article.titre_article.value}
+                            {article.titre_article.value} - {getPageValueByArticleReference(article.reference_article.value)}
                         </Link>
                     </li>
                 )
             }
         </ul>
     );
+
+    function getPageValueByArticleReference(reference) {
+        return reference.slice(reference.length - 3);
+    }
 }
 
 export default Livraison;

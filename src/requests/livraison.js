@@ -58,6 +58,7 @@ export async function getLivraisonByReference(livraisonReference) {
             ?F2_article crm:P1_is_identified_by ?E42_reference_article .
             ?E42_reference_article rdfs:label ?reference_article .
           }
-        }`
+        }
+        ORDER BY ASC(?reference_article)`
     )
 }

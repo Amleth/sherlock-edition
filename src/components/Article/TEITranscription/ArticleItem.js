@@ -1,5 +1,5 @@
 import React from "react";
-import {tagTranslate} from "../../utils/tagTranslator";
+import {tagTranslate} from "../../../utils/tagTranslator";
 
 function ArticleItem(props) {
     // Si on est sur une feuille, c'est-à-dire uniquement du texte à afficher
@@ -10,7 +10,7 @@ function ArticleItem(props) {
     }
     // Sinon, on fait un appel récursif sur tous les noeuds enfants
     return <React.Fragment>
-        {tagTranslate(props.item.tag, props.item)}
+        {tagTranslate(props.item.tag, props.item, props.setNote)}
     </React.Fragment>
 }
 

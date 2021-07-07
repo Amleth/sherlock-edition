@@ -1,26 +1,40 @@
+/** @jsxImportSource @emotion/react */
+import {css} from '@emotion/react'
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import '../styles/MG/article.css';
 import Article from "../components/Article";
-import {getArticleByReference} from "../requests/article";
+import Note from "../components/Article/Notes/Note";
+import Box from "@material-ui/core/Box";
+import Annotations from "../components/Article/Annotations/Annotations";
 
 function PageArticle() {
-    const [article, setArticle] = useState({});
-    console.log("articleReference")
 
-    const {articleReference} = useParams();
-    console.log(articleReference)
-    useEffect(() => {
-    }, []);
+  const {articleReference} = useParams();
+  useEffect(() => {
+  }, []);
 
-    return <React.Fragment>
+  const [note, setNote] = useState([]);
 
-        <div className={"article"}>
-            <Article
-                articleReference={articleReference}
-            />
-        </div>
-    </React.Fragment>
+  return <Box display="flex" className={"wrapper"}>
+
+    <div className={"article"}>
+      <Article
+        articleReference={articleReference}
+        setNote={setNote}
+      />
+    </div>
+    <Box position="fixed" css={css`
+      width: 40%;
+      background-color: #F9F9F9;
+      right: 0;
+      height: 100%;
+      overflow-y: auto;
+    `}
+    >
+      <Note note={note}/>
+      <Annotations />
+    </Box>
+  </Box>
 }
 
 export default PageArticle;

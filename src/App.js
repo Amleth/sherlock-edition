@@ -3,14 +3,27 @@ import LivraisonList from "./components/LivraisonList";
 import Livraison from "./components/Livraison";
 import PageArticle from "./pages/PageArticle";
 import {Route, Switch} from "react-router-dom";
+import { CssBaseline, ThemeProvider } from '@material-ui/core'
+import theme from './SherlockEditionMuiTheme'
+import Home from "./components/Home";
+import ArticleList from "./components/ArticleList";
 
 function App() {
   return (
-      <Switch>
-        <Route exact path="/" component={LivraisonList} />
-        <Route exact path="/livraison/:livraisonReference" component={Livraison} />
-        <Route exact path="/livraison/:livraisonReference/article/:articleReference" component={PageArticle} />
-      </Switch>
+
+    <React.Fragment>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/livraisons" component={LivraisonList}/>
+          <Route exact path="/articles" component={ArticleList}/>
+          <Route exact path="/livraison/:livraisonReference" component={Livraison}/>
+          <Route exact path="/livraison/:livraisonReference/article/:articleReference" component={PageArticle}/>
+        </Switch>
+      </ThemeProvider>
+    </React.Fragment>
   );
 }
+
 export default App;

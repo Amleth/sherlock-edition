@@ -1,11 +1,12 @@
 import React from "react";
+import Typography from "@material-ui/core/Typography";
 
 function ArticleVerseSpace(props) {
-    return <span
-        className={"space"}
+    return <Typography
+        mr={4} component="span"
     >
         {props.children}
-    </span>
+    </Typography>
 }
 
 export default ArticleVerseSpace;

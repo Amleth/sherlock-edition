@@ -1,19 +1,19 @@
 import React from "react";
-import ArticleParagraph from "../components/Article/ArticleParagraph";
-import ArticleItalics from "../components/Article/ArticleItalics";
-import ArticleTitle from "../components/Article/ArticleTitle";
-import ArticleNotHandledTag from "../components/Article/ArticleNotHandledTag";
-import ArticleItem from "../components/Article/ArticleItem";
-import ArticleEditionTitle from "../components/Article/ArticleEditionTitle";
-import ArticleQuote from "../components/Article/ArticleQuote";
-import ArticleLabel from "../components/Article/ArticleLabel";
-import ArticleVerse from "../components/Article/ArticleVerse";
-import ArticleVerseSpace from "../components/Article/ArticleVerseSpace";
-import ArticleNote from "../components/Article/ArticleNote";
-import ArticleRef from "../components/Article/ArticleRef";
-import ArticleImage from "../components/Article/ArticleImage";
+import ArticleParagraph from "../components/Article/TEITranscription/ArticleParagraph";
+import ArticleItalics from "../components/Article/TEITranscription/ArticleItalics";
+import ArticleTitle from "../components/Article/TEITranscription/ArticleTitle";
+import ArticleNotHandledTag from "../components/Article/TEITranscription/ArticleNotHandledTag";
+import ArticleItem from "../components/Article/TEITranscription/ArticleItem";
+import ArticleEditionTitle from "../components/Article/TEITranscription/ArticleEditionTitle";
+import ArticleQuote from "../components/Article/TEITranscription/ArticleQuote";
+import ArticleLabel from "../components/Article/TEITranscription/ArticleLabel";
+import ArticleVerse from "../components/Article/TEITranscription/ArticleVerse";
+import ArticleVerseSpace from "../components/Article/TEITranscription/ArticleVerseSpace";
+import ArticleNote from "../components/Article/TEITranscription/ArticleNote";
+import ArticleRef from "../components/Article/TEITranscription/ArticleRef";
+import ArticleImage from "../components/Article/TEITranscription/ArticleImage";
 
-function computeNode(node) {
+function computeNode(node, setNote) {
     //TODO: on ne devrait pas avoir à faire cette condition puisque tous les objets reçus ici ont un attribut children
     if (node.children) {
         return <React.Fragment>
@@ -21,14 +21,15 @@ function computeNode(node) {
                 <ArticleItem
                     key={item.id}
                     item={item}
+                    setNote={setNote}
                 />
             )}
         </React.Fragment>
     }
 }
 
-export function tagTranslate(tag, node) {
-    const computedNode = computeNode(node);
+export function tagTranslate(tag, node, setNote) {
+    const computedNode = computeNode(node, setNote);
     switch (tag) {
         case "p":
             return <ArticleParagraph>
@@ -54,6 +55,10 @@ export function tagTranslate(tag, node) {
             return <ArticleQuote>
                 {computedNode}
             </ArticleQuote>;
+        case "ab":
+            return <span>
+                {computedNode}
+            </span>;
         case "label":
             return <ArticleLabel>
                 {computedNode}
@@ -67,7 +72,7 @@ export function tagTranslate(tag, node) {
                 {computedNode}
             </ArticleVerseSpace>;
         case "note":
-            return <ArticleNote>
+            return <ArticleNote setNote={setNote} attributes={node.attributes}>
                 {computedNode}
             </ArticleNote>;
         case "lg":

@@ -54,6 +54,8 @@ function EstampeDetail() {
           <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Date : </Box>{estampeDetail.dateString}</Typography>
           <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Voir aussi : </Box>{estampeDetail.see_also ? <Link to={{pathname: estampeDetail.see_also.value}}>{estampeDetail.see_also.value}</Link> : ""}</Typography>
           <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Invenit :</Box>{estampeDetail.auteur ? estampeDetail.auteur.value : ""}</Typography>
+          <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Technique spécifique :</Box>{estampeDetail.technique_specifique ? estampeDetail.technique_specifique.value : ""}</Typography>
+          <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Technique générale :</Box>{estampeDetail.technique_generale ? estampeDetail.technique_generale.value : ""}</Typography>
 
           <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Thématiques : </Box>
             {estampeDetail.thematiques.map(thematique => {
@@ -62,7 +64,7 @@ function EstampeDetail() {
           </Typography>
           <Typography variant="h6"><Box component={"span"} fontWeight={1000}> Sous-ensembles : </Box>
             {estampeDetail.zones.map(zone => {
-              return <Link target="_blank" key={zone.uri.value} to={{pathname: zone.uri.value}}>{zone.label.value} - </Link>
+              return <Link target="_blank" key={zone.uri.value} to={{pathname: zone.uri.value}}>{zone.label ? zone.label.value : "pas de label"} - </Link>
             })}
           </Typography>
         </Box>
@@ -73,6 +75,7 @@ function EstampeDetail() {
 
 function getFormattedEstampeObject(estampe) {
   const estampeFormatted = estampe[0];
+  console.log(estampe)
 
   const datetime = new Date(estampeFormatted.date.value);
   estampeFormatted.dateString = datetime.toLocaleString('default', { year: 'numeric', month: 'long' });
@@ -80,9 +83,10 @@ function getFormattedEstampeObject(estampe) {
   estampeFormatted.thematiques = [];
 
   estampe.map(row => {
-    if (row.represents_label) {
+    if (row.E36_zone) {
       estampeFormatted.zones.push({label: row.represents_label, uri: row.E36_zone});
-    } else if (row.thematique) {
+    }
+    if (row.thematique) {
       estampeFormatted.thematiques.push({label: row.thematique, uri: row.E55_thematique});
     }
   });

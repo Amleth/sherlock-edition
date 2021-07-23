@@ -7,6 +7,8 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import theme from './SherlockEditionMuiTheme'
 import Home from "./components/Home";
 import ArticleList from "./components/ArticleList";
+import Estampes from "./components/Estampes";
+import EstampeDetail from "./components/EstampeDetail";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <CssBaseline/>
         <Switch>
           <Route exact path="/" component={Home}/>
+          <Route exact path="/estampes" component={Estampes}/>
+          <Route exact path="/estampe/:estampeReference" component={EstampeDetail}/>
           <Route exact path="/livraisons" component={LivraisonList}/>
           <Route exact path="/articles" component={ArticleList}/>
           <Route exact path="/livraison/:livraisonReference" component={Livraison}/>

@@ -1,4 +1,5 @@
 import {request as req, utils} from "./request";
+import {getCollectionGraphSparqlFragment, getGravureByE36SparqlFragment} from "../utils/utils";
 
 export async function getAllLivraisons() {
   const referenceLivraisonTypeId = "http://data-iremus.huma-num.fr/id/92c258a0-1e34-437f-9686-e24322b95305";
@@ -67,7 +68,7 @@ export async function getLivraisonByReference(livraisonReference) {
             } .
             ?E42_reference_livraison rdfs:label ?reference_livraison .
             ?F2_livraison_tei crm:P1_is_identified_by ?E42_reference_livraison .
-            ?F2_livraison_tei crm:P148_has_component ?F2_article_tei .
+            ?F2_livraigson_tei crm:P148_has_component ?F2_article_tei .
             
             #RECUPERATION TITRE ARTICLE
             ?F1_article lrmoo:R3_is_realised_in ?F2_article_tei .
@@ -132,24 +133,4 @@ export async function getEstampesByLivraisonReference(livraisonReference) {
           }
         }`
   )
-}
-
-function getCollectionGraphSparqlFragment() {
-  return `
-    #récupération collection
-    GRAPH <http://data-iremus.huma-num.fr/graph/corpora-icono/collections> {
-      ?D1_collection rdf:type crmdig:D1_Digital_Object .
-      ?D1_collection crm:P1_is_identified_by ?label_collection .
-    }
-  `
-}
-
-function getGravureByE36SparqlFragment() {
-  return `
-    ?E36_gravure a crm:E36_Visual_Item .
-    ?E36_gravure crm:P1_is_identified_by ?E42_reference_gravure .
-    ?E42_reference_gravure crm:P2_has_type <http://data-iremus.huma-num.fr/id/92c258a0-1e34-437f-9686-e24322b95305> .
-    ?E42_reference_gravure rdfs:label ?reference_gravure .
-    ?D1_collection crm:P148_has_component ?E36_gravure .      
-  `
 }

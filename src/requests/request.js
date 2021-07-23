@@ -6,6 +6,7 @@ export const utils = {
 };
 
 async function sparqlEndpoint(query) {
+    console.log(query)
     let res = await fetch(`http://localhost:3030/sherlock-concept/sparql`, {
         method: 'POST',
         headers: {

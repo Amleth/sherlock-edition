@@ -9,7 +9,6 @@ function ConceptRemover({removeConcept, conceptList}) {
     return ancestors.map(ancestor => ancestor.label).join('/');
   }
 
-  //TODO: mr + ET/OU toggle + hauteur des lignes + recherche sur la key et non le label
   return conceptList.map(concept => {
     return <Box mr={1} display="inline" key={`remover-${concept.key}`}>
       <Tooltip title={computeAncestors(concept.ancestors)}>

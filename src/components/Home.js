@@ -54,7 +54,7 @@ function Home() {
             <CardMedia
               sx={{height: 140}}
               image=""
-              title="Liste des livraisons"
+              title="Liste des articles"
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
@@ -69,23 +69,30 @@ function Home() {
       </Link>
     </Grid>
     <Grid item xs={10} md={3}>
-      <Card>
-        <CardActionArea>
-          <CardMedia
-            sx={{height: 140}}
-            image=""
-            title="Liste des livraisons"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Estampes
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Affichage interactif de toutes les estampes du Mercure Galant
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <Link
+        to={{
+          pathname: '/estampes/',
+        }}
+      >
+        <Card>
+          <CardActionArea>
+            <CardMedia
+              sx={{height: 140}}
+              image=""
+              title="Liste des estampes"
+            />
+
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Estampes
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Affichage synoptique de toutes les estampes du Mercure Galant
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Link>
     </Grid>
   </Grid>
 }

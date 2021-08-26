@@ -7,7 +7,7 @@ export const utils = {
 
 async function sparqlEndpoint(query) {
     console.log(query)
-    let res = await fetch(`http://localhost:3030/sherlock-concept/sparql`, {
+    let res = await fetch(`http://data-iremus.huma-num.fr/sparql`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',

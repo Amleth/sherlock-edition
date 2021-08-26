@@ -60,16 +60,6 @@ export function normalizeString(string) {
     return s.toLowerCase();
 }
 
-export function getCollectionGraphSparqlFragment() {
-    return `
-    #récupération collection
-    GRAPH <http://data-iremus.huma-num.fr/graph/corpora-icono/collections> {
-      ?D1_collection rdf:type crmdig:D1_Digital_Object .
-      ?D1_collection crm:P1_is_identified_by ?label_collection .
-    }
-  `
-}
-
 export function getGravureByE36SparqlFragment() {
     return `
     ?E36_gravure a crm:E36_Visual_Item .

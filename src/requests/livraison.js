@@ -1,5 +1,5 @@
-import {request as req, utils} from "./request";
-import {getCollectionGraphSparqlFragment, getGravureByE36SparqlFragment} from "../utils/utils";
+import { request as req, utils } from "./request";
+import { getGravureByE36SparqlFragment } from "../utils/utils";
 
 export async function getAllLivraisons() {
   const referenceLivraisonTypeId = "http://data-iremus.huma-num.fr/id/92c258a0-1e34-437f-9686-e24322b95305";
@@ -49,50 +49,47 @@ export async function getAllLivraisons() {
 }
 
 export async function getLivraisonByReference(livraisonReference) {
-  return req.sparqlEndpoint(
-    `
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-        PREFIX lrmoo: <http://www.cidoc-crm.org/lrmoo/>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX lr: <http://linkedrecipes.org/schema/>
-        PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
+  const query = `
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+  PREFIX lrmoo: <http://www.cidoc-crm.org/lrmoo/>
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  PREFIX lr: <http://linkedrecipes.org/schema/>
+  PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
 
-        SELECT DISTINCT ?titre_article ?titre_livraison ?reference_article ?F2_article_tei ?reference_gravure
-        WHERE {
-        
-          ${getCollectionGraphSparqlFragment()}  
-          GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
-            VALUES (?reference_livraison) {
-              ("${livraisonReference}")
-            } .
-            ?E42_reference_livraison rdfs:label ?reference_livraison .
-            ?F2_livraison_tei crm:P1_is_identified_by ?E42_reference_livraison .
-            ?F2_livraigson_tei crm:P148_has_component ?F2_article_tei .
-            
-            #RECUPERATION TITRE ARTICLE
-            ?F1_article lrmoo:R3_is_realised_in ?F2_article_tei .
-            ?F1_article crm:P1_is_identified_by ?titre_article .
-    
-            #RECUPERATION TITRE LIVRAISON
-                ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison_tei .
-            ?F1_livraison crm:P1_is_identified_by ?titre_livraison .
-        
-            #RECUPERATION REFERENCE ARTICLE
-            ?F2_article_tei crm:P1_is_identified_by ?E42_reference_article .
-            ?E42_reference_article rdfs:label ?reference_article .
-            ?E31_article crm:P1_is_identified_by ?E42_reference_article .
-            ?E31_article rdf:type crm:E31_Document. 
-            
-            #RECUPERATION PARTITIONS
-            OPTIONAL {
-              ?E31_article crm:P148_has_component ?E36_gravure .
-              ${getGravureByE36SparqlFragment()}
-            }
-          }
-        }
-        ORDER BY ASC(?reference_article)`
-  )
+  SELECT DISTINCT ?titre_article ?titre_livraison ?reference_article ?F2_article_tei ?reference_gravure
+  WHERE {
+    GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
+      VALUES (?reference_livraison) {
+        ("${livraisonReference}")
+      } .
+      ?E42_reference_livraison rdfs:label ?reference_livraison .
+      ?F2_livraison_tei crm:P1_is_identified_by ?E42_reference_livraison .
+      ?F2_livraison_tei crm:P148_has_component ?F2_article_tei .
+      
+      #RECUPERATION TITRE ARTICLE
+      ?F1_article lrmoo:R3_is_realised_in ?F2_article_tei .
+      ?F1_article crm:P1_is_identified_by ?titre_article .
+
+      #RECUPERATION TITRE LIVRAISON
+      ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison_tei .
+      ?F1_livraison crm:P1_is_identified_by ?titre_livraison .
+  
+      #RECUPERATION REFERENCE ARTICLE
+      ?F2_article_tei crm:P1_is_identified_by ?E42_reference_article .
+      ?E42_reference_article rdfs:label ?reference_article .
+      ?E31_article crm:P1_is_identified_by ?E42_reference_article .
+      ?E31_article rdf:type crm:E31_Document. 
+      
+      #RECUPERATION PARTITIONS
+      OPTIONAL {
+        ?E31_article crm:P148_has_component ?E36_gravure .
+        ${getGravureByE36SparqlFragment()}
+      }
+    }
+  }
+  ORDER BY ASC(?reference_article)`
+  return req.sparqlEndpoint(query)
 }
 
 export async function getEstampesByLivraisonReference(livraisonReference) {
@@ -105,9 +102,8 @@ export async function getEstampesByLivraisonReference(livraisonReference) {
         PREFIX lr: <http://linkedrecipes.org/schema/>
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
 
-        SELECT DISTINCT ?label_collection ?titre_estampe ?reference_gravure ?E36_gravure
+        SELECT DISTINCT ?titre_estampe ?reference_gravure ?E36_gravure
         WHERE {
-            ${getCollectionGraphSparqlFragment()}
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 VALUES (?reference_livraison) {
                     ("${livraisonReference}")

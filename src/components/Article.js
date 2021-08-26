@@ -1,24 +1,24 @@
 /** @jsxImportSource @emotion/react */
-import {css} from '@emotion/react'
-import React, {useEffect, useState} from "react";
-import {getArticleContentByReference} from "../requests/article";
+import { css } from '@emotion/react'
+import React, { useEffect, useState } from "react";
+import { getArticleContentByReference } from "../requests/article";
 import ArticleItem from "./Article/TEITranscription/ArticleItem";
 import Box from "@material-ui/core/Box";
 
-function Article(props) {
+function Article({ articleReference, setNote }) {
   const [article, setArticle] = useState({
     contentData: {
       children: []
     }
   });
-  console.log(article);
+
   useEffect(() => {
-    getArticleContentByReference(props.articleReference).then(articleContentData => {
+    getArticleContentByReference(articleReference).then(articleContentData => {
       setArticle({
         contentData: articleContentData
       });
     });
-  }, []);
+  }, [articleReference]);
 
   const articleContent = article.contentData.children;
   return <Box
@@ -27,12 +27,12 @@ function Article(props) {
           font-family:  ${theme.typography.article.fontFamily};
           font-size: 1em;
       `}
-  paddingX={5} >
+    paddingX={5} >
     {articleContent.map(item =>
       <ArticleItem
         key={item.id}
         item={item}
-        setNote={props.setNote}
+        setNote={setNote}
       />
     )}
   </Box>

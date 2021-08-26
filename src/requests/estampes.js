@@ -1,5 +1,5 @@
-import {request as req} from "./request";
-import {getCollectionGraphSparqlFragment, getGravureByE36SparqlFragment} from "../utils/utils";
+import { request as req } from "./request";
+import { getGravureByE36SparqlFragment } from "../utils/utils";
 
 export function getAllEstampes() {
   return req.sparqlEndpoint(
@@ -11,9 +11,8 @@ export function getAllEstampes() {
         PREFIX lr: <http://linkedrecipes.org/schema/>
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
 
-        SELECT DISTINCT ?label_collection ?reference_gravure ?E36_gravure ?date ?E52_time_span
+        SELECT DISTINCT ?reference_gravure ?E36_gravure ?date ?E52_time_span
         WHERE {
-            ${getCollectionGraphSparqlFragment()}
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 ## RECUPERATION LIVRAISON
                 ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison .
@@ -66,15 +65,9 @@ export function getEstampeDetail(estampeReference) {
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
         PREFIX : <undefined>
 
-        SELECT DISTINCT ?label_collection ?titre_sur_image ?titre_peritexte ?titre_descriptif ?E36_zone ?reference_gravure ?E36_gravure ?date  ?E12_gravure ?auteur ?technique_specifique ?technique_generale ?see_also ?represents_label ?label_cote_bnf ?E55_thematique ?thematique
+        SELECT DISTINCT ?titre_sur_image ?titre_peritexte ?titre_descriptif ?E36_zone ?reference_gravure ?E36_gravure ?date  ?E12_gravure ?auteur ?technique_specifique ?technique_generale ?see_also ?represents_label ?label_cote_bnf ?E55_thematique ?thematique
         WHERE {
-            
-    #récupération collection
-    GRAPH <http://data-iremus.huma-num.fr/graph/corpora-icono/collections> {
-      ?D1_collection rdf:type crmdig:D1_Digital_Object .
-      ?D1_collection crm:P1_is_identified_by ?label_collection .
-    }
-  
+
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 ## RECUPERATION LIVRAISON
                 ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison .

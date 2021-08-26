@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import {css} from '@emotion/react'
-import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import { css } from '@emotion/react'
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Article from "../components/Article";
 import Note from "../components/Article/Notes/Note";
 import Box from "@material-ui/core/Box";
@@ -9,7 +9,7 @@ import Annotations from "../components/Article/Annotations/Annotations";
 
 function PageArticle() {
 
-  const {articleReference} = useParams();
+  const { articleReference } = useParams();
   useEffect(() => {
   }, []);
 
@@ -31,7 +31,7 @@ function PageArticle() {
       overflow-y: auto;
     `}
     >
-      <Note note={note}/>
+      <Note note={note} />
       <Annotations />
     </Box>
   </Box>

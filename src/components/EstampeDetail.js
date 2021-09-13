@@ -79,17 +79,18 @@ function getFormattedEstampeObject(estampe) {
 
   const datetime = new Date(estampeFormatted.date.value);
   estampeFormatted.dateString = datetime.toLocaleString('default', { year: 'numeric', month: 'long' });
-  estampeFormatted.zones = [];
-  estampeFormatted.thematiques = [];
-
+  const zones = [];
+  const thematiques = [];
   estampe.map(row => {
-    if (row.E36_zone) {
-      estampeFormatted.zones.push({label: row.represents_label, uri: row.E36_zone});
+    if (row.E36_zone && ! zones.find(zone => zone.uri.value === row.E36_zone.value)) {
+      zones.push({label: row.represents_label, uri: row.E36_zone});
     }
-    if (row.thematique) {
-      estampeFormatted.thematiques.push({label: row.thematique, uri: row.E55_thematique});
+    if (row.thematique && ! thematiques.find(thematique => thematique.uri.value === row.E55_thematique.value)) {
+      thematiques.push({label: row.thematique, uri: row.E55_thematique});
     }
   });
+  estampeFormatted.zones = zones;
+  estampeFormatted.thematiques = thematiques;
   return estampeFormatted;
 }
 

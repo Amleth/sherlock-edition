@@ -21,7 +21,7 @@ function App() {
           <Route exact path="/estampes" component={Estampes} />
           <Route exact path="/estampe/:estampeReference" component={EstampeDetail} />
           <Route exact path="/livraisons" component={LivraisonList} />
-          <Route exact path="/articles" component={ArticleList} />
+          <Route exact path="/articles-et-estampes/" component={ArticleList} />
           <Route exact path="/livraison/:livraisonReference" component={Livraison} />
           <Route exact path="/livraison/:livraisonReference/article/:articleReference" component={PageArticle} />
         </Switch>

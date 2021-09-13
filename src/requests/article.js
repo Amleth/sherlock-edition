@@ -28,7 +28,7 @@ export async function getArticleByReference(articleReference) {
 }
 
 export async function getArticleContentByReference(reference) {
-    let res = await fetch(`https://raw.githubusercontent.com/Amleth/SHERLOCK/master/out/files/mercure-galant/json/articles/MG-${reference}.json`, {
+    let res = await fetch(`http://data-iremus.huma-num.fr/files/mercure-galant/json/articles/MG-${reference}.json`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',

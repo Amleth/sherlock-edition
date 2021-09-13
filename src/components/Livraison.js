@@ -43,7 +43,12 @@ function Livraison() {
   }, []);
 
   return <React.Fragment>
-    <Typography variant="h2" mt={10} mb={5} align="center">Articles</Typography>
+    {livraison.length > 0 && <Typography variant="h1" mt={10} mb={5} align="center">
+      {livraison[0].titre_livraison.value}
+    </Typography>}
+    <Typography variant="h2" mt={10} mb={5} align="center">
+      Articles
+    </Typography>
     <Table>
       <TableHead>
         <TableRow>
@@ -54,6 +59,7 @@ function Livraison() {
       </TableHead>
       <TableBody>
         {livraison.map(article => <TableRow
+          hover
           key={article.reference_article.value}
           onClick={() => { history.push(location.pathname + '/article/' + article.reference_article.value) }}>
           <TableCell>
@@ -77,7 +83,11 @@ function Livraison() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {estampes.map(estampe => <TableRow>
+            {estampes.map(estampe => <TableRow
+              hover
+              key={estampe.referenceEstampe}
+              onClick={() => { history.push('/estampe/' + estampe.referenceEstampe) }}
+            >
               <TableCell>
                 <img src={`https://picsum.photos/50?ref=${estampe.referenceEstampe}`} />
               </TableCell>

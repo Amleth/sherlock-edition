@@ -11,7 +11,7 @@ import ConceptRemover from "./ConceptRemover";
 import ToggleButtonGroup from "@material-ui/core/ToggleButtonGroup";
 import ToggleButton from "@material-ui/core/ToggleButton";
 
-function ArticleList() {
+function CorpusSearchEngine() {
   const [articleList, setArticleList] = useState([]);
   const [articleIriFilteredList, setArticleIriFilteredList] = useState([]);
   const [conceptList, setConceptList] = useState([]);
@@ -116,4 +116,4 @@ function ArticleList() {
   </React.Fragment>
 }
 
-export default ArticleList;
+export default CorpusSearchEngine;

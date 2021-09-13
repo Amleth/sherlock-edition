@@ -6,7 +6,7 @@ import { Route, Switch } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import theme from './SherlockEditionMuiTheme'
 import Home from "./components/Home";
-import ArticleList from "./components/ArticleList";
+import CorpusSearchEngine from "./components/CorpusSearchEngine";
 import Estampes from "./components/Estampes";
 import EstampeDetail from "./components/EstampeDetail";
 
@@ -21,7 +21,7 @@ function App() {
           <Route exact path="/estampes" component={Estampes} />
           <Route exact path="/estampe/:estampeReference" component={EstampeDetail} />
           <Route exact path="/livraisons" component={LivraisonList} />
-          <Route exact path="/articles-et-estampes/" component={ArticleList} />
+          <Route exact path="/articles-et-estampes/" component={CorpusSearchEngine} />
           <Route exact path="/livraison/:livraisonReference" component={Livraison} />
           <Route exact path="/livraison/:livraisonReference/article/:articleReference" component={PageArticle} />
         </Switch>

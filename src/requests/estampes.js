@@ -1,7 +1,7 @@
 import { request as req } from "./request";
 import { getGravureByE36SparqlFragment } from "../utils/utils";
 
-export function getAllEstampes() {
+export function getEstampesByPeriod(period) {
   return req.sparqlEndpoint(
     `
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -10,8 +10,9 @@ export function getAllEstampes() {
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX lr: <http://linkedrecipes.org/schema/>
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-        SELECT DISTINCT ?reference_gravure ?E36_gravure ?date ?E52_time_span
+        SELECT DISTINCT (concat ('/estampe/', ?reference_gravure) as ?link_path) (concat ('https://picsum.photos/50?ref=', ?reference_gravure) as ?image_path) ?E36_gravure ?date ?E52_time_span
         WHERE {
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 ## RECUPERATION LIVRAISON
@@ -45,8 +46,8 @@ export function getAllEstampes() {
                 ?F30_manifestation_creation rdf:type lrmoo:F30_Manifestation_Creation .
                 ?F30_manifestation_creation crm:P4_has_time-span ?E52_time_span .
                 ?E52_time_span crm:P82b_end_of_the_end ?date .
-                filter (datatype(?date) = <http://www.w3.org/2001/XMLSchema#datetime>)
-
+                filter (datatype(?date) = <http://www.w3.org/2001/XMLSchema#dateTime>)
+                filter (?date > '${period[0]}'^^xsd:dateTime && ?date < '${period[1]}'^^xsd:dateTime)
           }
         }
         ORDER BY ?date`

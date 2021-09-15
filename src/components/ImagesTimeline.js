@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import * as PropTypes from "prop-types";
 
 function ImagesTimeline({
-                          initialPeriod, stepsAsDateAnyFormat, dateAnyFormatIsLower, dateAnyFormatToStringLabel, getImagesByPeriod, getLabelByImage = () => "Détails", printPeriod = (period) =>
+                          initialPeriod, stepsAsDateAnyFormat, dateAnyFormatIsLower, dateAnyFormatToStringLabel, getImagesByPeriod, printPeriod = (period) =>
     <React.Fragment>
       Période :
       {dateAnyFormatToStringLabel(stepsAsDateAnyFormat[period[0]])}
@@ -130,7 +130,7 @@ position:absolute;
   text-align: center
   `}
           >
-            <Typography variant="p" color="primary">{getLabelByImage(image)}</Typography>
+            <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
           </Box>
         </Link>
       }
@@ -144,7 +144,6 @@ ImagesTimeline.propTypes = {
   dateAnyFormatIsLower: PropTypes.func.isRequired,
   dateAnyFormatToStringLabel: PropTypes.func.isRequired,
   getImagesByPeriod: PropTypes.func.isRequired,
-  getLabelByImage: PropTypes.func,
   printPeriod: PropTypes.func
 }
 

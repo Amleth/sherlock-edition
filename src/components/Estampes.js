@@ -12,7 +12,6 @@ function Estampes() {
     dateAnyFormatIsLower={(date1, date2) => new Date(date1) < new Date(date2) }
     getImagesByPeriod={getEstampesByPeriod}
     stepsAsDateAnyFormat={estampesStepsDatetimeString}
-    getLabelByImage={(image) => new Date(image.date.value).toLocaleString('default', {year: 'numeric', month: 'long'})}
   />
 }
 

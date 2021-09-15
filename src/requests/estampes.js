@@ -12,8 +12,7 @@ export function getEstampesByPeriod(period) {
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-        SELECT DISTINCT (concat ('/estampe/', ?reference_gravure) as ?link_path) (concat ('https://picsum.photos/50?ref=', ?reference_gravure) as ?image_path) ?E36_gravure ?date ?E52_time_span
-        WHERE {
+            SELECT DISTINCT (concat ('/estampe/', ?reference_gravure) as ?link_path) (concat ('https://picsum.photos/150?ref=', ?reference_gravure) as ?image_path) (?E36_gravure as ?iri) ?date (GROUP_CONCAT (distinct ?titre_estampe; separator="  -  ") as ?titles)        WHERE {
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 ## RECUPERATION LIVRAISON
                 ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison .
@@ -47,9 +46,10 @@ export function getEstampesByPeriod(period) {
                 ?F30_manifestation_creation crm:P4_has_time-span ?E52_time_span .
                 ?E52_time_span crm:P82b_end_of_the_end ?date .
                 filter (datatype(?date) = <http://www.w3.org/2001/XMLSchema#dateTime>)
-                filter (?date > '${period[0]}'^^xsd:dateTime && ?date < '${period[1]}'^^xsd:dateTime)
+                filter (?date >= '${period[0]}'^^xsd:dateTime && ?date <= '${period[1]}'^^xsd:dateTime)
           }
         }
+        GROUP BY ?E36_gravure ?reference_gravure ?date
         ORDER BY ?date`
   )
 }

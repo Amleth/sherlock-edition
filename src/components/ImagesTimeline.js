@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import * as PropTypes from "prop-types";
 
 function ImagesTimeline({
-                          initialPeriod, stepsAsDateAnyFormat, dateAnyFormatIsLower, dateAnyFormatToStringLabel, getImagesByPeriod, printPeriod = (period) =>
+                          initialPeriod, stepsAsDateAnyFormat, dateAnyFormatIsLower, dateAnyFormatToStringLabel, getImagesByPeriod, getLabelByImage = () => "Détails", printPeriod = (period) =>
     <React.Fragment>
       Période :
       {dateAnyFormatToStringLabel(stepsAsDateAnyFormat[period[0]])}
@@ -20,17 +20,28 @@ function ImagesTimeline({
   function reducer(images, action) {
     switch (action.type) {
       case 'loadImages':
-        return {loaded: [...images.loaded, ...action.payload], displayed: images.displayed};
-      case 'displayImages':
-        return {loaded: images.loaded, displayed: action.payload};
+        //Images can appear twice, because the request should be less/more OR EQUAL.
+        return {
+          ...images,
+          loaded: [...images.loaded, ...action.payload.filter(image => !images.iriList.includes(image.iri.value))],
+          iriList: [...images.iriList, ...action.payload.map(image => image.iri.value)]
+        };
+      case 'displayImages': {
+        action.payload.sort((image1, image2) => {return dateAnyFormatIsLower(image1.date.value, image2.date.value) ? -1 : 1})
+        return {
+          ...images,
+          displayed: action.payload
+        };
+      }
       default:
         throw new Error();
     }
   }
 
   //Use reducer because of concurrent access
-  const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: []});
+  const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: [], iriList: []});
   const [period, setPeriod] = useState(initialPeriod);
+  const [hover, setHover] = useState(false);
   const [datesLoaded] = useState([]);
 
   function populateImageByPeriod(p) {
@@ -95,12 +106,32 @@ function ImagesTimeline({
         onChange={(event, newPeriod) => setPeriod(newPeriod)}
         valueLabelDisplay="off"
       />
+      <Typography variant="h4"
+                  align="center">{images.displayed.length} résultats</Typography>
     </Box>
     {images.displayed.map(image => {
-        return <Link key={image.link_path.value} to={{
-          pathname: `${image.link_path.value}`,
-        }}>
-          <img src={image.image_path.value}/>
+        return <Link
+          key={image.link_path.value}
+          to={{pathname: `${image.link_path.value}`}}
+          css={css`&:hover img{opacity:0.3};&:hover div {opacity: 1};position:relative;display:inline-block;`}
+        >
+          <img
+            css={css`transition: .4s ease;`}
+            src={image.image_path.value}/>
+          <Box
+            css={css`opacity:0;
+position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 15px 0;
+  width:100%;
+  text-align: center
+  `}
+          >
+            <Typography variant="p" color="primary">{getLabelByImage(image)}</Typography>
+          </Box>
         </Link>
       }
     )}
@@ -113,6 +144,7 @@ ImagesTimeline.propTypes = {
   dateAnyFormatIsLower: PropTypes.func.isRequired,
   dateAnyFormatToStringLabel: PropTypes.func.isRequired,
   getImagesByPeriod: PropTypes.func.isRequired,
+  getLabelByImage: PropTypes.func,
   printPeriod: PropTypes.func
 }
 

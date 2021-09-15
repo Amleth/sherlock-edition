@@ -41,7 +41,7 @@ function EstampeDetail() {
     <Box height={1} css={css`text-align:center; min-width: 50%`}>
       <Link to={{pathname: estampeDetail.E36_gravure.value}} target="_blank"><Typography variant="h4">{estampeDetail.titre_descriptif ? estampeDetail.titre_descriptif.value : "pas de titre trouvé"}</Typography></Link>
       <img css={css`max-width:100%;max-height:80%; margin:auto`} src={`https://picsum.photos/1000?ref=${estampeReference}`}/>
-      <Typography variant="h5">{estampeDetail.label_cote_bnf.value}</Typography>
+      <Typography variant="h5">{estampeDetail.label_cote_bnf ? estampeDetail.label_cote_bnf.value : "pas de cote bnf"}</Typography>
     </Box>
     <Divider orientation="vertical" flexItem />
     <Box>

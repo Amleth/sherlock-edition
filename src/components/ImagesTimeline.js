@@ -116,33 +116,52 @@ function ImagesTimeline({
         onChangeCommitted={() => readPeriod()}
         valueLabelDisplay="off"
       />
-      <Typography variant="h4"
+      <Typography mb={3} variant="h4"
                   align="center">{images.displayed.length} résultats</Typography>
     </Box>
-    <Box css={css`width:70%; display: inline-block;`}>
-      {images.displayed.map(image => { return <StyledLink
-            key={image.link_path.value}
-            to={{pathname: `${image.link_path.value}`}}
-            onMouseEnter={() => setHoveredImage(image)}
-          >
-            <img
-              key={"img"+image.link_path.value}
-              src={image.image_path.value}/>
-            {<StyledHoverBox
-            >
-              <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
-            </StyledHoverBox>}
-          </StyledLink>
-        }
-      )
+    <Box display="flex">
+      <Box css={css`
+      min-width:70%; 
+      max-width:70%; 
+      display: inline-block;
+      overflow-y: scroll;
+      height: 70vh;
+      margin-right: 5px;
+      ::-webkit-scrollbar {
+        width: 5px;
       }
-    </Box>
-    <Box css={css`width:30%; position:fixed; display: inline; border: 3px solid lightgrey;`}>
-      {hoveredImage ? <React.Fragment>
-        <Typography variant="H4">Titre(s)</Typography>
-        {hoveredImage.titles.value.split('#').map(title => <li>{title}</li>)}
-        </React.Fragment>
-      : null}
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }`}>
+        {images.displayed.map(image => { return <StyledLink
+              key={image.link_path.value}
+              to={{pathname: `${image.link_path.value}`}}
+              onMouseEnter={() => setHoveredImage(image)}
+            >
+              <img
+                key={"img"+image.link_path.value}
+                src={image.image_path.value}/>
+              {<StyledHoverBox>
+                <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
+              </StyledHoverBox>}
+            </StyledLink>
+          }
+        )
+        }
+      </Box>
+      <Box css={css`display: inline; border: 3px solid lightgrey;flex: auto; margin-right: 3px;`}>
+        {hoveredImage ? <React.Fragment>
+          <Typography variant="H4">Titre(s)</Typography>
+          {hoveredImage.titles.value.split('#').map(title => <li>{title}</li>)}
+          </React.Fragment>
+        : null}
+      </Box>
     </Box>
   </Box>
 }

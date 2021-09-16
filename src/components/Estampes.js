@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {getEstampesByPeriod} from "../requests/estampes";
 import {estampesStepsDatetimeString} from "../utils/utils";
 import ImagesTimeline from "./ImagesTimeline";

@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import {css} from '@emotion/react'
 import React, {useEffect, useReducer, useState} from "react";
+import styled from 'styled-components'
 import Box from "@material-ui/core/Box";
 import {Link} from "react-router-dom";
 import Slider from "@material-ui/core/Slider";
@@ -19,20 +20,22 @@ function ImagesTimeline({
 
   function reducer(images, action) {
     switch (action.type) {
-      case 'loadImages':
-        //Images can appear twice, because the request should be less/more OR EQUAL.
+      case 'loadImages': {
+        //Images can appear twice, because the request should be less/more OR EQUAL. We also have to sort them
+        const newLoadedImagesSorted = [...images.loaded, ...action.payload.filter(image => !images.iriList.includes(image.iri.value))].sort((image1, image2) => {
+          return dateAnyFormatIsLower(image1.date.value, image2.date.value) ? -1 : 1
+        })
         return {
           ...images,
-          loaded: [...images.loaded, ...action.payload.filter(image => !images.iriList.includes(image.iri.value))],
+          loaded: newLoadedImagesSorted,
           iriList: [...images.iriList, ...action.payload.map(image => image.iri.value)]
         };
-      case 'displayImages': {
-        action.payload.sort((image1, image2) => {return dateAnyFormatIsLower(image1.date.value, image2.date.value) ? -1 : 1})
+      }
+      case 'displayImages':
         return {
           ...images,
           displayed: action.payload
         };
-      }
       default:
         throw new Error();
     }
@@ -41,19 +44,26 @@ function ImagesTimeline({
   //Use reducer because of concurrent access
   const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: [], iriList: []});
   const [period, setPeriod] = useState(initialPeriod);
-  const [hover, setHover] = useState(false);
+  const [readPeriod, setReadPeriod] = useState(null);
+  const [hoveredImage, setHoveredImage] = useState(null);
   const [datesLoaded] = useState([]);
 
-  function populateImageByPeriod(p) {
-    getImagesByPeriod(p.map(dateAsTabIndex => stepsAsDateAnyFormat[dateAsTabIndex])).then(r => {
-      dispatch({type: 'loadImages', payload: r.results.bindings})
-    });
-  }
+
+  useEffect(() => {
+    setReadPeriod(true);
+  }, [])
 
   useEffect(() => {
 
+    function populateImageByPeriod(p) {
+      getImagesByPeriod(p.map(dateAsTabIndex => stepsAsDateAnyFormat[dateAsTabIndex])).then(r => {
+        dispatch({type: 'loadImages', payload: r.results.bindings})
+      });
+    }
+
     // first load
-    if (datesLoaded.length === 0) {
+    if (datesLoaded.length === 0 && period.length) {
+      console.log("1")
       datesLoaded[0] = period[0];
       datesLoaded[1] = period[1];
       populateImageByPeriod(period);
@@ -61,12 +71,14 @@ function ImagesTimeline({
 
     //changing left bound
     if (period[0] < datesLoaded[0]) {
+      console.log("2")
       populateImageByPeriod([period[0], datesLoaded[0]]);
       datesLoaded[0] = period[0];
     }
 
     //changing right bound
     if (period[1] > datesLoaded[1]) {
+      console.log("3")
       populateImageByPeriod([datesLoaded[1], period[1]]);
       datesLoaded[1] = period[1];
     }
@@ -78,7 +90,7 @@ function ImagesTimeline({
           && !dateAnyFormatIsLower(stepsAsDateAnyFormat[period[1]], image.date.value)
       })
     })
-  }, [period]);
+  }, [readPeriod]);
 
   /* There are 2 calls to setImagesToDisplay, because there is 2 cases :
    * - Period changes, but no new image to load => hook on period.
@@ -95,7 +107,7 @@ function ImagesTimeline({
   }, [images.loaded])
 
   return <Box mt={5}>
-    <Box css={css`width: 70%; margin: auto`}>
+    <Box css={css`margin: auto; width: 70%`}>
       <Typography variant="h4" align="center">{printPeriod(period)}</Typography>
       <Slider
         min={0}
@@ -104,39 +116,68 @@ function ImagesTimeline({
         step={1}
         marks
         onChange={(event, newPeriod) => setPeriod(newPeriod)}
+        onChangeCommitted={(event, newPeriod) => setReadPeriod(Math.random())}
         valueLabelDisplay="off"
       />
       <Typography variant="h4"
                   align="center">{images.displayed.length} résultats</Typography>
     </Box>
-    {images.displayed.map(image => {
-        return <Link
-          key={image.link_path.value}
-          to={{pathname: `${image.link_path.value}`}}
-          css={css`&:hover img{opacity:0.3};&:hover div {opacity: 1};position:relative;display:inline-block;`}
-        >
-          <img
-            css={css`transition: .4s ease;`}
-            src={image.image_path.value}/>
-          <Box
-            css={css`opacity:0;
-position:absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 15px 0;
-  width:100%;
-  text-align: center
-  `}
+    <Box css={css`width:70%; display: inline-block;`}>
+      {images.displayed.map(image => { return <StyledLink
+            key={image.link_path.value}
+            to={{pathname: `${image.link_path.value}`}}
+            onMouseEnter={() => setHoveredImage(image)}
           >
-            <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
-          </Box>
-        </Link>
+            <img
+              key={"img"+image.link_path.value}
+              src={image.image_path.value}/>
+            {<StyledHoverBox
+            >
+              <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
+            </StyledHoverBox>}
+          </StyledLink>
+        }
+      )
       }
-    )}
+    </Box>
+    <Box css={css`width:30%; position:fixed; display: inline; border: 3px solid lightgrey;`}>
+      {hoveredImage ? <React.Fragment>
+        <Typography variant="H4">Titre(s)</Typography>
+        {hoveredImage.titles.value.split('#').map(title => <li>{title}</li>)}
+        </React.Fragment>
+      : null}
+    </Box>
   </Box>
 }
+
+const StyledLink = styled(Link)`
+  &:hover img{
+    opacity:0.3;
+  }
+  
+  img {
+    transition: .4s ease;
+  }
+  
+  &:hover div {
+    opacity: 1;
+  };
+  
+  position: relative;
+  display: inline-block;
+`
+
+const StyledHoverBox = styled(Box)`
+    opacity:0;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 0 0;
+    width:100%;
+    text-align: center
+`
 
 ImagesTimeline.propTypes = {
   initialPeriod: PropTypes.arrayOf(PropTypes.number).isRequired,

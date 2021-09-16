@@ -44,7 +44,6 @@ function ImagesTimeline({
   //Use reducer because of concurrent access
   const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: [], iriList: []});
   const [period, setPeriod] = useState(initialPeriod);
-  const [hoveredImage, setHoveredImage] = useState(null);
   const [datesLoaded] = useState([]);
 
 
@@ -103,8 +102,8 @@ function ImagesTimeline({
     })
   }, [images.loaded])
 
-  return <Box mt={5}>
-    <Box css={css`margin: auto; width: 70%`}>
+  return <Box css={css`margin-top: 5vh;`}>
+    <Box css={css`margin: auto; width: 70%; height:20vh;`}>
       <Typography variant="h4" align="center">{printPeriod(period)}</Typography>
       <Slider
         min={0}
@@ -116,7 +115,7 @@ function ImagesTimeline({
         onChangeCommitted={() => readPeriod()}
         valueLabelDisplay="off"
       />
-      <Typography mb={3} variant="h4"
+      <Typography variant="h4"
                   align="center">{images.displayed.length} résultats</Typography>
     </Box>
     <Box display="flex">
@@ -139,32 +138,30 @@ function ImagesTimeline({
       ::-webkit-scrollbar-thumb:hover {
         background: #555;
       }`}>
-        {images.displayed.map(image => { return <StyledLink
-              key={image.link_path.value}
-              to={{pathname: `${image.link_path.value}`}}
-              onMouseEnter={() => setHoveredImage(image)}
-            >
-              <img
-                key={"img"+image.link_path.value}
-                src={image.image_path.value}/>
-              {<StyledHoverBox>
-                <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
-              </StyledHoverBox>}
-            </StyledLink>
-          }
-        )
-        }
-      </Box>
-      <Box css={css`display: inline; border: 3px solid lightgrey;flex: auto; margin-right: 3px;`}>
-        {hoveredImage ? <React.Fragment>
-          <Typography variant="H4">Titre(s)</Typography>
-          {hoveredImage.titles.value.split('#').map(title => <li>{title}</li>)}
-          </React.Fragment>
-        : null}
+        <ImagesDisplayer images={images} dateAnyFormatToStringLabel={dateAnyFormatToStringLabel}/>
       </Box>
     </Box>
   </Box>
 }
+
+const ImagesDisplayer = React.memo(props => {
+  return props.images.displayed.map(image => <StyledLink
+      key={image.link_path.value}
+      to={{pathname: `${image.link_path.value}`}}
+    >
+      <img
+        src={image.image_path.value} alt=""/>
+      <StyledHoverBox>
+        <Typography variant="p" color="primary">{props.dateAnyFormatToStringLabel(image.date.value)}</Typography>
+      </StyledHoverBox>
+      <StyledHoverDetailBox>
+        <Typography variant="H4">Titre(s)</Typography>
+        {image.titles.value.split('#').map(title => <li key={"li" + title}>{title}</li>)}
+      </StyledHoverDetailBox>
+    </StyledLink>
+  )
+});
+
 
 const StyledLink = styled(Link)`
   &:hover img{
@@ -184,15 +181,27 @@ const StyledLink = styled(Link)`
 `
 
 const StyledHoverBox = styled(Box)`
-    opacity:0;
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 0 0;
-    width:100%;
-    text-align: center
+  opacity:0;
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 0 0;
+  width:100%;
+  text-align: center
+`
+
+const StyledHoverDetailBox = styled(Box)`
+  position:fixed; 
+  opacity: 0;
+  right: 0; 
+  top: 25vh; 
+  width: 29vw;
+  height: 70vh;
+  border: 3px solid lightgrey;
+  flex: auto; 
+  margin-right: 3px;
 `
 
 ImagesTimeline.propTypes = {

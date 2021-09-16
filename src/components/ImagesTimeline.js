@@ -44,16 +44,15 @@ function ImagesTimeline({
   //Use reducer because of concurrent access
   const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: [], iriList: []});
   const [period, setPeriod] = useState(initialPeriod);
-  const [readPeriod, setReadPeriod] = useState(null);
   const [hoveredImage, setHoveredImage] = useState(null);
   const [datesLoaded] = useState([]);
 
 
   useEffect(() => {
-    setReadPeriod(true);
+    readPeriod();
   }, [])
 
-  useEffect(() => {
+  function readPeriod() {
 
     function populateImageByPeriod(p) {
       getImagesByPeriod(p.map(dateAsTabIndex => stepsAsDateAnyFormat[dateAsTabIndex])).then(r => {
@@ -63,7 +62,6 @@ function ImagesTimeline({
 
     // first load
     if (datesLoaded.length === 0 && period.length) {
-      console.log("1")
       datesLoaded[0] = period[0];
       datesLoaded[1] = period[1];
       populateImageByPeriod(period);
@@ -78,7 +76,6 @@ function ImagesTimeline({
 
     //changing right bound
     if (period[1] > datesLoaded[1]) {
-      console.log("3")
       populateImageByPeriod([datesLoaded[1], period[1]]);
       datesLoaded[1] = period[1];
     }
@@ -90,7 +87,7 @@ function ImagesTimeline({
           && !dateAnyFormatIsLower(stepsAsDateAnyFormat[period[1]], image.date.value)
       })
     })
-  }, [readPeriod]);
+  }
 
   /* There are 2 calls to setImagesToDisplay, because there is 2 cases :
    * - Period changes, but no new image to load => hook on period.
@@ -116,7 +113,7 @@ function ImagesTimeline({
         step={1}
         marks
         onChange={(event, newPeriod) => setPeriod(newPeriod)}
-        onChangeCommitted={(event, newPeriod) => setReadPeriod(Math.random())}
+        onChangeCommitted={() => readPeriod()}
         valueLabelDisplay="off"
       />
       <Typography variant="h4"

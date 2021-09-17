@@ -8,15 +8,39 @@ import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import * as PropTypes from "prop-types";
 
+function DefaultPeriodLabel({period, props}) {
+  return <React.Fragment>
+    Période :
+    {props.dateAnyFormatToStringLabel(props.stepsAsDateAnyFormat[period[0]])}
+    -
+    {props.dateAnyFormatToStringLabel(props.stepsAsDateAnyFormat[period[1]])}
+  </React.Fragment>
+}
+
+function DefaultHoveredImageInfo({image, props}) {
+  return <StyledHoverDetailBox>
+    <Typography variant="H4">Titre(s)</Typography>
+    {image.titles.value.split('#').map(title => <li key={"li" + title}>{title}</li>)}
+  </StyledHoverDetailBox>
+}
+
 function ImagesTimeline({
-                          initialPeriod, stepsAsDateAnyFormat, dateAnyFormatIsLower, dateAnyFormatToStringLabel, getImagesByPeriod, printPeriod = (period) =>
-    <React.Fragment>
-      Période :
-      {dateAnyFormatToStringLabel(stepsAsDateAnyFormat[period[0]])}
-      -
-      {dateAnyFormatToStringLabel(stepsAsDateAnyFormat[period[1]])}
-    </React.Fragment>
+                          initialPeriod,
+                          stepsAsDateAnyFormat,
+                          dateAnyFormatIsLower,
+                          dateAnyFormatToStringLabel,
+                          getImagesByPeriod,
+                          PeriodLabel: PeriodLabel = DefaultPeriodLabel,
+                          HoveredImageInfo: HoveredImageInfo = DefaultHoveredImageInfo,
                         }) {
+  const props = {
+    initialPeriod,
+    stepsAsDateAnyFormat,
+    dateAnyFormatIsLower,
+    dateAnyFormatToStringLabel,
+    getImagesByPeriod,
+    PeriodLabel
+  }
 
   function reducer(images, action) {
     switch (action.type) {
@@ -104,7 +128,7 @@ function ImagesTimeline({
 
   return <Box css={css`margin-top: 5vh;`}>
     <Box css={css`margin: auto; width: 70%; height:20vh;`}>
-      <Typography variant="h4" align="center">{printPeriod(period)}</Typography>
+      <Typography variant="h4" align="center"><PeriodLabel period={period} props={props}/></Typography>
       <Slider
         min={0}
         max={stepsAsDateAnyFormat.length - 1}
@@ -138,26 +162,28 @@ function ImagesTimeline({
       ::-webkit-scrollbar-thumb:hover {
         background: #555;
       }`}>
-        <ImagesDisplayer images={images} dateAnyFormatToStringLabel={dateAnyFormatToStringLabel}/>
+        <ImagesDisplayer
+          HoveredImageInfo={HoveredImageInfo}
+          images={images}
+          dateAnyFormatToStringLabel={dateAnyFormatToStringLabel}
+          props={props}
+        />
       </Box>
     </Box>
   </Box>
 }
 
-const ImagesDisplayer = React.memo(props => {
-  return props.images.displayed.map(image => <StyledLink
+const ImagesDisplayer = React.memo(({HoveredImageInfo, images, dateAnyFormatToStringLabel, props}) => {
+  return images.displayed.map(image => <StyledLink
       key={image.link_path.value}
       to={{pathname: `${image.link_path.value}`}}
     >
       <img
         src={image.image_path.value} alt=""/>
       <StyledHoverBox>
-        <Typography variant="p" color="primary">{props.dateAnyFormatToStringLabel(image.date.value)}</Typography>
+        <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
       </StyledHoverBox>
-      <StyledHoverDetailBox>
-        <Typography variant="H4">Titre(s)</Typography>
-        {image.titles.value.split('#').map(title => <li key={"li" + title}>{title}</li>)}
-      </StyledHoverDetailBox>
+      <HoveredImageInfo image={image} props={props}/>
     </StyledLink>
   )
 });
@@ -210,7 +236,8 @@ ImagesTimeline.propTypes = {
   dateAnyFormatIsLower: PropTypes.func.isRequired,
   dateAnyFormatToStringLabel: PropTypes.func.isRequired,
   getImagesByPeriod: PropTypes.func.isRequired,
-  printPeriod: PropTypes.func
+  PeriodLabel: PropTypes.elementType,
+  HoveredImageInfo: PropTypes.elementType
 }
 
 /*

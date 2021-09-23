@@ -102,12 +102,12 @@ function ConceptSelector({addConcept}) {
       setInput(e.target.value)
     }}/>
     <Box css={() => css`
-            height: 55vh;
         `}
     >
       <DataGrid
-        rowHeight={30}
         className={classes.root}
+        rowHeight={30}
+        autoHeight
         rows={rows}
         columns={columns}
         pageSize={7}

@@ -98,13 +98,13 @@ function CorpusSearchEngine() {
             margin: auto;
             margin-top: 10vh;
             width: 90%;
-            height: 90vh;
         `}
     >
       <DataGrid
         rows={rows}
         columns={columns}
         pageSize={9}
+        autoHeight
         filterModel={{
           items: [{ columnField: 'id', value: articleIriFilteredList, operatorValue: 'filterIri' }],
         }}

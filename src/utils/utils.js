@@ -457,6 +457,6 @@ export function getGravureByE36SparqlFragment() {
     ?E36_gravure crm:P1_is_identified_by ?E42_reference_gravure .
     ?E42_reference_gravure crm:P2_has_type <http://data-iremus.huma-num.fr/id/92c258a0-1e34-437f-9686-e24322b95305> .
     ?E42_reference_gravure rdfs:label ?reference_gravure .
-    ?D1_collection crm:P148_has_component ?E36_gravure .      
+    ?D1_collection crm:P165_has_component ?E36_gravure .      
   `
 }

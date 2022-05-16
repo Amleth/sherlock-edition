@@ -1,14 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import {css} from '@emotion/react'
-import React, {useEffect, useReducer, useState} from "react";
+import { css } from '@emotion/react'
+import React, { useEffect, useReducer, useState } from "react";
 import styled from 'styled-components'
 import Box from "@material-ui/core/Box";
-import {Link} from "react-router-dom";
+import { Skeleton } from '@material-ui/core';
+import { Link } from "react-router-dom";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import * as PropTypes from "prop-types";
 
-function DefaultPeriodLabel({period, props}) {
+function DefaultPeriodLabel({ period, props }) {
   return <React.Fragment>
     Période :
     {props.dateAnyFormatToStringLabel(props.stepsAsDateAnyFormat[period[0]])}
@@ -17,22 +18,23 @@ function DefaultPeriodLabel({period, props}) {
   </React.Fragment>
 }
 
-function DefaultHoveredImageInfo({image, props}) {
+function DefaultHoveredImageInfo({ image, date, props }) {
   return <StyledHoverDetailBox>
+    <Typography variant="H4">{date}</Typography>
     <Typography variant="H4">Titre(s)</Typography>
     {image.titles.value.split('#').map(title => <li key={"li" + title}>{title}</li>)}
   </StyledHoverDetailBox>
 }
 
 function ImagesTimeline({
-                          initialPeriod,
-                          stepsAsDateAnyFormat,
-                          dateAnyFormatIsLower,
-                          dateAnyFormatToStringLabel,
-                          getImagesByPeriod,
-                          PeriodLabel: PeriodLabel = DefaultPeriodLabel,
-                          HoveredImageInfo: HoveredImageInfo = DefaultHoveredImageInfo,
-                        }) {
+  initialPeriod,
+  stepsAsDateAnyFormat,
+  dateAnyFormatIsLower,
+  dateAnyFormatToStringLabel,
+  getImagesByPeriod,
+  PeriodLabel: PeriodLabel = DefaultPeriodLabel,
+  HoveredImageInfo: HoveredImageInfo = DefaultHoveredImageInfo,
+}) {
   const props = {
     initialPeriod,
     stepsAsDateAnyFormat,
@@ -66,7 +68,7 @@ function ImagesTimeline({
   }
 
   //Use reducer because of concurrent access
-  const [images, dispatch] = useReducer(reducer, {loaded: [], displayed: [], iriList: []});
+  const [images, dispatch] = useReducer(reducer, { loaded: [], displayed: [], iriList: [] });
   const [period, setPeriod] = useState(initialPeriod);
   const [datesLoaded] = useState([]);
 
@@ -79,7 +81,7 @@ function ImagesTimeline({
 
     function populateImageByPeriod(p) {
       getImagesByPeriod(p.map(dateAsTabIndex => stepsAsDateAnyFormat[dateAsTabIndex])).then(r => {
-        dispatch({type: 'loadImages', payload: r.results.bindings})
+        dispatch({ type: 'loadImages', payload: r.results.bindings })
       });
     }
 
@@ -128,7 +130,7 @@ function ImagesTimeline({
 
   return <Box css={css`margin-top: 5vh;`}>
     <Box css={css`margin: auto; width: 70%; height:20vh;`}>
-      <Typography variant="h4" align="center"><PeriodLabel period={period} props={props}/></Typography>
+      <Typography variant="h4" align="center"><PeriodLabel period={period} props={props} /></Typography>
       <Slider
         min={0}
         max={stepsAsDateAnyFormat.length - 1}
@@ -140,7 +142,7 @@ function ImagesTimeline({
         valueLabelDisplay="off"
       />
       <Typography variant="h4"
-                  align="center">{images.displayed.length} résultats</Typography>
+        align="center">{images.displayed.length} résultats</Typography>
     </Box>
     <Box display="flex">
       <Box css={css`
@@ -173,21 +175,35 @@ function ImagesTimeline({
   </Box>
 }
 
-const ImagesDisplayer = React.memo(({HoveredImageInfo, images, dateAnyFormatToStringLabel, props}) => {
-  return images.displayed.map(image => <StyledLink
+const ImagesDisplayer = React.memo(({ HoveredImageInfo, images, dateAnyFormatToStringLabel, props }) => {
+
+  return images.displayed.map(image => {
+    return <StyledLink
       key={image.link_path.value}
-      to={{pathname: `${image.link_path.value}`}}
+      to={{ pathname: `${image.link_path.value}` }}
     >
-      <img
-        src={image.image_path.value} alt=""/>
-      <StyledHoverBox>
-        <Typography variant="p" color="primary">{dateAnyFormatToStringLabel(image.date.value)}</Typography>
-      </StyledHoverBox>
-      <HoveredImageInfo image={image} props={props}/>
+      <ImageDisplayer image={image} />
+      <HoveredImageInfo image={image} date={dateAnyFormatToStringLabel(image.date.value)} props={props} />
     </StyledLink>
-  )
+  })
 });
 
+function ImageDisplayer(image) {
+  const [loaded, setLoaded] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  return notFound
+    ? <ImageNotFound />
+    : <>
+      <img
+        src={image.image.image_path.value}
+        alt=""
+        style={!loaded ? { display: 'none' } : {}}
+        onLoad={() => setLoaded(true)}
+        onError={() => setNotFound(true)}
+      />
+      {!loaded && <Skeleton variant="rectangular" width={50} height={100} />}
+    </>
+}
 
 const StyledLink = styled(Link)`
   &:hover img{
@@ -218,6 +234,12 @@ const StyledHoverBox = styled(Box)`
   text-align: center
 `
 
+const ImageNotFound = styled(Box)`
+  height: 100px;
+  width: 50px;
+  background-image: linear-gradient(45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, #fff);
+  background-size: 20px 20px;
+`
 const StyledHoverDetailBox = styled(Box)`
   position:fixed; 
   opacity: 0;

@@ -9,6 +9,7 @@ import Divider from "@material-ui/core/Divider";
 import {DataGrid} from "@material-ui/data-grid";
 import {renderCellExpand} from "./renderCellExpand";
 import LaunchIcon from '@material-ui/icons/Launch';
+import EstampeDetailImage from './EstampeDetailImage';
 
 function EstampeDetail() {
   const {estampeReference} = useParams();
@@ -86,8 +87,7 @@ function EstampeDetail() {
             width:${highlightedSubArea.width}px;
             height:${highlightedSubArea.height}px;
             `}/>
-          <img css={css`margin:auto; max-width:100%;max-height:100%;`}
-               src={`https://picsum.photos/1000?ref=${estampeReference}`} alt=""/>
+            <EstampeDetailImage estampeReference={estampeReference} />
         </Box>
       </Link>
     </Box>

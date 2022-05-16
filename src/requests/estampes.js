@@ -11,8 +11,7 @@ export function getEstampesByPeriod(period) {
         PREFIX lr: <http://linkedrecipes.org/schema/>
         PREFIX crmdig: <http://www.ics.forth.gr/isl/CRMdig/>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-            SELECT DISTINCT (concat ('/estampe/', ?reference_gravure) as ?link_path) (concat ('https://picsum.photos/75?ref=', ?reference_gravure) as ?image_path) (?E36_gravure as ?iri) ?date (GROUP_CONCAT (distinct ?titre_estampe; separator="#") as ?titles)        WHERE {
+            SELECT DISTINCT (concat ('/estampe/', ?reference_gravure) as ?link_path) (concat ('https://ceres.huma-num.fr/iiif/3/mercure-galant-estampes--', ?reference_gravure, '/full/50,/0/default.jpg') as ?image_path) (?E36_gravure as ?iri) ?date (GROUP_CONCAT (distinct ?titre_estampe; separator="#") as ?titles)        WHERE {
             GRAPH <http://data-iremus.huma-num.fr/graph/mercure-galant> {
                 ## RECUPERATION LIVRAISON
                 ?F1_livraison lrmoo:R3_is_realised_in ?F2_livraison .
@@ -22,19 +21,21 @@ export function getEstampesByPeriod(period) {
                 ?E31_livraison rdf:type crm:E31_Document. 
       
                 #RECUPERATION GRAVURE
-                ?E31_livraison crm:P148_has_component ?E36_gravure .
+                ?E31_livraison crm:P165_has_component ?E36_gravure .
                 ${getGravureByE36SparqlFragment()}
                 
                 #RECUPERATION TITRE 
                 
-                ?E13 crm:P140_assigned_attribute_to ?E36_gravure .
-                ?E13 crm:P177_assigned_property_type ?assigned_property_type .
-                FILTER (?assigned_property_type IN (
-                  <http://data-iremus.huma-num.fr/id/01a07474-f2b9-4afd-bb05-80842ecfb527>,
-                  <http://data-iremus.huma-num.fr/id/ded9ea93-b400-4550-9aa8-e5aac1d627a0>,
-                  <http://data-iremus.huma-num.fr/id/58fb99dd-1ffb-4e00-a16f-ef6898902301>
-                ))
-                ?E13 crm:P141_assigned ?titre_estampe .
+                OPTIONAL {
+                  ?E13 crm:P140_assigned_attribute_to ?E36_gravure .
+                  ?E13 crm:P177_assigned_property_type ?assigned_property_type .
+                  FILTER (?assigned_property_type IN (
+                    <http://data-iremus.huma-num.fr/id/01a07474-f2b9-4afd-bb05-80842ecfb527>,
+                    <http://data-iremus.huma-num.fr/id/ded9ea93-b400-4550-9aa8-e5aac1d627a0>,
+                    <http://data-iremus.huma-num.fr/id/58fb99dd-1ffb-4e00-a16f-ef6898902301>
+                  ))
+                  ?E13 crm:P141_assigned ?titre_estampe .
+                }
                 
                 
                 #RECUPERATION DATE
